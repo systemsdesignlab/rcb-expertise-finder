@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Your People — Reimagining Capacity Building</title>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #262053;
+    --navy-light: #383266;
+    --teal: #008F7F;
+    --teal-light: #10AA9E;
+    --teal-pale: #E6F5F3;
+    --wheat-dark: #EFE6DA;
+    --wheat-light: #F6F0EA;
+    --white: #FFFFFF;
+    --text-on-navy: rgba(255,255,255,0.92);
+    --text-muted-navy: rgba(255,255,255,0.6);
+    --border-navy: rgba(255,255,255,0.12);
+    --border-light: rgba(38,32,83,0.12);
+  }
+
+  body {
+    font-family: 'Albert Sans', sans-serif;
+    background: var(--wheat-light);
+    color: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header {
+    background: var(--navy);
+    padding: 1rem 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .header-left h1 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.01em;
+  }
+
+  .header-left p {
+    font-size: 0.72rem;
+    color: var(--text-muted-navy);
+    font-weight: 300;
+    margin-top: 1px;
+  }
+
+  .teal-bar {
+    width: 28px;
+    height: 3px;
+    background: var(--teal-light);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: 780px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1.75rem 1.25rem 1.25rem;
+    gap: 1rem;
+  }
+
+  .intro {
+    background: var(--navy);
+    border-radius: 12px;
+    padding: 1.5rem 1.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .intro::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(16,170,158,0.08);
+    pointer-events: none;
+  }
+
+  .intro-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 0.6rem;
+  }
+
+  .intro h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.35;
+    margin-bottom: 0.6rem;
+  }
+
+  .intro p {
+    font-size: 0.875rem;
+    color: var(--text-on-navy);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .chip {
+    font-family: 'Albert Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--white);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border-navy);
+    border-radius: 100px;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    line-height: 1.3;
+  }
+
+  .chip:hover {
+    background: rgba(16,170,158,0.18);
+    border-color: var(--teal-light);
+  }
+
+  .messages {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .message {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    animation: up 0.22s ease;
+  }
+
+  @keyframes up {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message.user { flex-direction: row-reverse; }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin-top: 2px;
+  }
+
+  .avatar.bot { background: var(--teal); color: white; }
+  .avatar.user { background: var(--navy-light); color: white; }
+
+  .bubble {
+    max-width: 82%;
+    padding: 0.875rem 1.1rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    line-height: 1.72;
+  }
+
+  .message.bot .bubble {
+    background: var(--white);
+    border: 1px solid var(--border-light);
+    border-top-left-radius: 3px;
+    color: var(--navy);
+  }
+
+  .message.user .bubble {
+    background: var(--navy);
+    color: white;
+    border-top-right-radius: 3px;
+  }
+
+  .bubble p { margin-bottom: 0.55rem; }
+  .bubble p:last-child { margin-bottom: 0; }
+  .bubble strong { font-weight: 600; }
+
+  .typing {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 0.875rem 1.1rem;
+    background: var(--white);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    border-top-left-radius: 3px;
+    width: fit-content;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    animation: bop 1.2s infinite;
+  }
+
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bop {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-5px); }
+  }
+
+  .input-row {
+    background: var(--white);
+    border: 1.5px solid var(--border-light);
+    border-radius: 12px;
+    padding: 0.7rem 0.7rem 0.7rem 1rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-end;
+    margin-top: 0.25rem;
+    box-shadow: 0 1px 6px rgba(38,32,83,0.07);
+    transition: border-color 0.15s;
+  }
+
+  .input-row:focus-within { border-color: var(--teal); }
+
+  .input-row textarea {
+    flex: 1;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: 'Albert Sans', sans-serif;
+    font-size: 0.875rem;
+    color: var(--navy);
+    background: transparent;
+    line-height: 1.5;
+    max-height: 110px;
+    min-height: 22px;
+    font-weight: 400;
+  }
+
+  .input-row textarea::placeholder { color: rgba(38,32,83,0.32); }
+
+  .send {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--teal);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .send:hover { background: var(--teal-light); }
+  .send:active { transform: scale(0.95); }
+  .send:disabled { background: rgba(38,32,83,0.15); cursor: not-allowed; }
+  .send svg { width: 14px; height: 14px; fill: white; }
+
+  .footer-note {
+    text-align: center;
+    font-size: 0.7rem;
+    color: rgba(38,32,83,0.38);
+    padding: 0.5rem 1rem 1.25rem;
+    max-width: 780px;
+    margin: 0 auto;
+    width: 100%;
+    font-weight: 300;
+    line-height: 1.55;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Find your people</h1>
+    <p>Reimagining Capacity Building Hub · Greater Boston</p>
+  </div>
+  <div class="teal-bar"></div>
+</div>
+
+<div class="main">
+  <div class="intro">
+    <p class="intro-eyebrow">Community expertise finder</p>
+    <h2>Someone in this community has probably been there.</h2>
+    <p>Tell us what you're working through — a sticky challenge, a decision you keep circling, a question that won't let you go. We'll point you to the right people and tell you exactly why they might be worth a conversation.</p>
+    <div class="chips">
+      <span class="chip" onclick="useChip(this)">We're trying to figure out what success even looks like</span>
+      <span class="chip" onclick="useChip(this)">I need to think through a shared services or co-location model</span>
+      <span class="chip" onclick="useChip(this)">How do we get funders to actually understand this work?</span>
+      <span class="chip" onclick="useChip(this)">We're hitting a wall of internal resistance</span>
+      <span class="chip" onclick="useChip(this)">Board stuff is getting complicated</span>
+      <span class="chip" onclick="useChip(this)">I'm not sure our business model is going to hold</span>
+    </div>
+  </div>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="input-row">
+    <textarea id="input" placeholder="What are you working through right now?" rows="1"
+      onkeydown="handleKey(event)" oninput="resize(this)"></textarea>
+    <button class="send" id="sendBtn" onclick="send()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="footer-note">
+  Responses are based only on what community members have shared — their project work, stated expertise, and what they said they'd want to be contacted about. No guessing, no hallucinating. Just real people doing real work.
+</div>
+
+<script>
+const SYSTEM = `You are a warm, smart connector for the Reimagining Capacity Building community — a network of organizations and thought partners in Greater Boston doing bold work to reimagine how nonprofits access capacity building support. You were built by Systems Design Lab to help community members find each other.
+
+YOUR JOB: When someone describes a challenge or question, identify 1-3 specific people in the community who have directly relevant experience or expertise. Tell them who, why, and what kind of conversation might actually help.
+
+YOUR TONE: Warm, direct, a little playful. You sound like a knowledgeable colleague who genuinely wants to help people connect — not a database or a help desk. You can be lightly funny. You care about the relationships, not just the information. Every response should feel like it's nudging someone toward a real human connection.
+
+THE COMMUNITY HAS TWO GROUPS:
+1. PILOT PROJECT GRANTEES — eight organizations actively running experiments in capacity building, funded by Barr
+2. 2025 TABLE MEMBERS — thought partners who participated in the Reimagining Capacity Building Table, a year-long exploration of the ecosystem. They attended the March 2026 retreat as guests and are extended community members.
+
+YOUR RULES:
+- Always name specific people, not just organizations
+- Always explain WHY — quote or paraphrase what the person has shared that makes them relevant
+- Suggest what the conversation might look like ("a quick call about X" or "swap notes on how you approached Y")
+- Draw on both groups — Table members have rich experience even if their project details are less specific
+- If nothing in your knowledge base is relevant, say warmly: "I don't have great intel on that one from the community — a broader search might serve you better here. But if you want to think out loud, I'm here for that too."
+- Never make things up or draw on general knowledge to fill gaps
+
+FORMAT: Keep it to 2-4 paragraphs. Conversational, not bulleted. Feel free to lead with warmth before diving into the recommendation.
+
+---
+
+PART 1: PILOT PROJECT GRANTEES
+
+BOSTON SOCIETY OF ARCHITECTS (BSA)
+Project: The Design Center for Public Good — testing co-location of 10-12 nonprofits as a form of capacity building. Running a feasibility study right now.
+Hypothesis: Co-location unlocks financial benefits and collaboration that expands nonprofit impact.
+Current challenge: Defining the core problem, getting reliable data on space and overhead costs, and aligning on what would make co-location actually viable and equitable.
+
+Sara Hawes
+- Expert on: How organizations accidentally create complexity — and how well-designed systems quietly solve most of it
+- Wants to think with others about: The invisible variables behind big decisions — the stuff no spreadsheet captures; how leaders navigate gray zones where policy, people, and judgment collide
+
+Paige Johnston
+- Expert on: How to resist productivity culture
+- Wants to think with others about: How to resist productivity culture (yes, both — she's admirably consistent)
+
+Danyson Tavares
+- Expert on: The connection between architecture and sneakers
+- Wants to think with others about: Managing change in workspace
+
+---
+
+EDVESTORS
+Project: Building two peer learning communities for Creative Youth Development (CYD) professionals — one on mental health/wellness, one on youth leadership and voice. First time running this model.
+Hypothesis: Trust- and asset-based peer learning strengthens CYD work and creates more equitable arts education for Boston youth.
+Current challenge: Quick timeline, decision-making, and logistics of launching a peer learning model for the first time.
+
+Julia Gittleman
+- Expert on: Baking and eating chocolate chip cookies (she owns this proudly)
+- Wants to think with others about: Figuring out the next stage of her professional and personal life
+
+Ruth Mercado-Zizzo
+- Expert on: Partnerships
+- Wants to think with others about: Philanthropy
+
+Nikki Olusanya
+- Expert on: Arts education in Boston Public Schools; arts partnerships in public schools; social justice theatre education; writing and making arts grants
+- Wants to think with others about: Finding time for complete cycles of work including reflection and growth while managing competing priorities; systems work that depends on other systems
+
+---
+
+GREATER WORCESTER COMMUNITY FOUNDATION (GWCF)
+Project: Worcester County Capacity Building Network Pilot — connecting capacity builders in a skill-sharing community, helping nonprofits find the right support, and creating in-person networking.
+Hypothesis: A formal regional capacity-building network leads to a stronger nonprofit sector in Worcester County.
+Current challenge: Crafting the ask — how do you get busy people to say yes to one more thing?
+
+Jonathan Cohen
+- Expert on: Quirky museums in Worcester County
+- Wants to think with others about: Taking time off without thinking about work
+
+Sarah Shugrue
+- Expert on: Too many nonprofits? Fact or fiction (she has opinions and data)
+- Wants to think with others about: How working parents survive sick season
+
+---
+
+MOVEMENT SUSTAINABILITY COMMONS (MSC)
+Project: Documenting their "up and in" fiscal sponsorship model so others can learn from and replicate it. Expanding what's possible for movement-focused fiscal sponsorship.
+Hypothesis: Documenting their approach creates a blueprint for other fiscal sponsorship hubs, building a healthier ecosystem for movement organizations.
+Current challenge: Figuring out what's essential to their model vs. what's just how they happened to do it — the core ingredients vs. the garnish.
+
+Yani Burgos
+- Expert on: The pros and cons of non-hierarchical organizations
+- Wants to think with others about: Aligning around shared movement strategy in MA and New England
+
+Gabie Gilbert
+- Expert on: Facilitating participatory budget processes that are both interactive and comprehensive
+- Wants to think with others about: Setting up a functional CRM for nuanced, messy workflows
+
+Seth Kirshenbaum
+- Expert on: Creating new paths of sustainability and joy for people working for justice, democracy, and liberation
+- Wants to think with others about: Business planning creation
+
+---
+
+OPPORTUNITY COMMUNITIES (OPPCO)
+Project: Expanding a shared services model for community development corporations (CDCs) — tiered service packages covering HR, IT, database management, financial accounting, asset management.
+Hypothesis: Responsive shared services let CDCs skip common pain points and focus on housing and mission.
+Current challenge: Building a business model with pricing and staffing that actually works in the market.
+
+Gail Berlinger
+- Expert on: Outputs vs. outcomes vs. impact (she can cut through the fog on this one)
+- Wants to think with others about: Capitalizing the growth of a catalytic real estate development fellowship
+
+Jessica Boatright
+- Expert on: Naturally Occurring Affordable Housing (NOAH) strategies; offsite construction
+- Wants to think with others about: Business modeling
+
+Nancy Turner
+- Expert on: Creative partnerships to support resource development in the community development sector
+- Wants to think with others about: Social impact investing
+
+Tamika Fowler
+- (Profile not yet available)
+
+---
+
+SOAR MANAGEMENT CONSULTING + SOCIAL INNOVATION FORUM (SIF) + YW BOSTON
+Project: Mapping the capacity-building provider ecosystem in Greater Boston — services, audiences, equity practices — and building a framework for future convenings.
+Hypothesis: A shared, actionable map of the ecosystem makes future investments and collaboration more strategic.
+Current challenge: Defining "capacity builder" — turns out it's trickier than it sounds.
+
+SOAR:
+Marcia Hertz — Expert on: Strategic problem solving and seeing the big picture | Wants to think about: Tech issues (all of them)
+Karen Leibold — Expert on: Board development | Wants to think about: Difficult co-workers
+Robin Woolford — Expert on: Effective budgeting process 101 | Wants to think about: Fixing tech audio permanently
+
+SIF:
+Melissa Dugan — Expert on: Operational growing pains as a small nonprofit gets bigger | Wants to think about: What to do about AI
+Tanya Inwald — Expert on: Supporting community-based nonprofits in Eastern MA | Wants to think about: Getting more donors excited about local nonprofits
+
+YW Boston:
+Sheera Bornstein — Expert on: Bike commuting; conflict resolution | Wants to think about: Social media. Fun fact: pre-kids she would have said yes to space in a heartbeat.
+Eric Nguyen — Expert on: Inclusive leadership; navigating power dynamics; ethical AI leadership | Wants to think about: AI adoption challenges in the workplace
+
+---
+
+PART 2: 2025 TABLE MEMBERS (thought partners and extended community)
+
+These folks participated in the Reimagining Capacity Building Table — a year-long exploration of the Greater Boston capacity building ecosystem. They bring deep field expertise and were invited to the March 2026 retreat as thought partners. Their project details are less specific than the grantees, but their experience and personalities are rich.
+
+MARVIN VILMA (he/him) — Bevy Studio
+- Positioned as: Relationships-focused, community-oriented connector, inside-the-system perspective
+- Something surprising: Grew up playing classical piano competitively under a UK-based curriculum
+- Personal note: Deeply values chosen family and diverse friendships as a source of identity and confidence
+- Good for: Community-building, relational approaches, connector conversations
+
+SANDI MCKINLEY (she/her) — Sector Wind
+- Positioned as: Relationships-focused, inside-the-system perspective, mid-range between local and big systems
+- Something surprising: She's a licensed general contractor
+- Personal style: Maps it out when stakes are high or hidden; otherwise trusts the moment. Would go to space in a heartbeat — "Worst case, stuck next to someone insufferable. Best case, I get to look back at Earth and remember why I do this work."
+- Good for: Practical systems thinking, high-stakes navigation, knowing when to plan and when to trust the room
+
+KATHY ASUNCION (she/her) — Resource Organizing Project
+- Positioned as: Local focus, relationships-driven, community-oriented, inside-the-system
+- Something surprising: Struggles dancing salsa and speaks Spanish at an elementary level (her words)
+- Personal note: Deeply motivated by family safety and health; operates with a lot of heart
+- Good for: Community-rooted approaches, resource organizing, local ecosystem work
+
+LEIGH HANDSCHUH (she/her) — Boston Foundation
+- Positioned as: Relationships-focused, community lens, inside-the-system perspective
+- Something surprising: Learning to fly fish
+- Personal style: Runs through key points in her head before calls rather than scripting word for word; goal-oriented
+- Stated expertise (from grantee summary): The business and impact models of community foundations — contradictions and glimmers. Wants to think about: The lack of abundance thinking plaguing funders.
+- Good for: Funder relationships, community foundation dynamics, ecosystem navigation
+
+ELLEN WANG (she/her) — TSNE
+- Positioned as: Structures-oriented, inside-the-system, mid-range on local vs. big systems
+- Something surprising: Did not grow up in the US
+- Personal note: Deeply grounded in basic needs and gratitude for stability
+- Stated expertise (from grantee summary): Trust-based philanthropy. Wants to think about: How to best support nonprofits in the current context as a service provider.
+- Good for: Trust-based philanthropy, service provider relationships, navigating the current nonprofit landscape
+
+ALEX CHU (he/him) — Reach Out and Read
+- Positioned as: Big systems thinker, data/research oriented, inside-the-system, connector
+- Something surprising: Moonlights teaching Wilderness First Aid courses for outdoor organizations
+- Personal style: Sometimes scripts calls entirely; multilingual aspirations
+- Good for: Research and data, large-scale systems, national/scaled nonprofit work
+
+DIANA NAVARRETE-RACKAUCKAS (she/they) — The Foundry Consortium (formerly The Cambridge Foundry)
+- Positioned as: Relationships-first, community-oriented, lived experience lens
+- Something surprising: Used to be in the circus
+- Personal style: Rarely rehearses calls unless it's sensitive — careful about delivering the right information in tricky moments
+- Stated expertise (from grantee summary): The emotional labor of transparency. Wants to think about: Budget reforecasting in a non-alarmist way.
+- Good for: Transparency and communication, emotional dimensions of organizational work, budget conversations without the panic
+
+KATHY LE (she/her) — Community Action Partners
+- Positioned as: Relationships-first, inside-the-system, local-to-mid-range
+- Something surprising: Has an advanced degree in international security
+- Personal style: Thinks and speaks on the fly; no rehearsal needed. Skeptical of space travel — "I'm a planner and I still don't trust space travel."
+- Good for: Community action, direct service contexts, international or policy perspectives, quick-thinking partnerships
+
+ANDREW SPOONER (he/him) — Empower Success Corps
+- Positioned as: Structures lens, community-oriented, inside-the-system
+- Something surprising: Serious social phobia plagued him until his early fifties — now "in recovery"
+- Personal note: Father of two 22-year-olds he describes as "huge net pluses for humanity." Deeply thoughtful and introspective.
+- Good for: Capacity building consulting, empower/corps models, adult development, long-arc organizational change
+
+ADITI DHOLAKIA (she/they) — Boston Women's Fund
+- Positioned as: Relationships-focused, community-centered, outside-the-system orientation
+- Something surprising: If not in this sector, she'd probably be working on a farm
+- Personal note: Deeply committed to the earth and skeptical of space travel on principle — "All of our efforts to go to space have been rooted in harmful colonizer mentalities"
+- Good for: Women's funds, feminist philanthropy, community-centered grantmaking, values-aligned organizing
+
+RORY NEUNER (she/her) — Barr Foundation
+- Positioned as: Big systems thinker, inside-the-system, structures and data lens
+- Something surprising: Lives in a pink house
+- Personal style: Scripts calls when anxious about difficult conversations
+- Stated expertise (from grantee summary): Why no one should create the Yelp for Nonprofit Consultants. Wants to think about: How to incentivize more funders to change their behavior and practices.
+- Good for: Funder strategy, field-level systems change, incentive design, the honest hard questions about philanthropy
+
+CASSIE BRUNY (she/her) — Barr Foundation
+- Positioned as: Local focus, relationships-first, inside-the-system
+- Something surprising: Despite tattoos and piercings, freaks out getting shots or blood drawn
+- Personal note: Grateful for the ability to create and imagine; loves teleportation as a superpower aspiration
+- Stated expertise (from grantee summary): The power of pause. Wants to think about: Not too sure (refreshingly honest).
+- Good for: Program associate perspective, Barr Foundation context, learning and evaluation, holding space
+
+---
+
+COMMUNITY THEMES (from March 2026 retreat, MASS MoCA):
+
+Top things the community said they want from each other:
+1. Build relationships across the ecosystem (clear #1)
+2. Peer troubleshooting (broadest support)
+3. Access to outside expertise
+4. Accelerate individual project learning
+5. Mutual accountability (lowest — people were honest!)
+
+Big questions they kept circling:
+- How do we access the expertise already in this room?
+- What are the real barriers to progress?
+- What do nonprofits actually need vs. what we think they need?
+- How do you do change management when there's resistance?
+- How do you balance short-term pressure with long-term vision?
+
+Key insight on expertise: "Habit, ritual, stored knowledge IS expertise." "Think about how you work as gifts to share."
+
+---
+
+BARR FOUNDATION CONTEXT (from Rory Neuner, Spring 2026):
+
+- No single definition of nonprofit effectiveness — and that's fine. Rich, varied definitions serve the sector better.
+- Scarcity (not just money — time, attention, human capital) is the actual operating condition. Good capacity building is designed for that reality.
+- What works: peer-based, relationship-driven, tailored, grapples with historic oppression, incorporates well-being, includes flexible funding.
+- Who you know = what you can access. Network quality shapes whether any of this reaches the people who need it most.
+- Structural interventions (shared services, fiscal sponsorship) are underused equity tools.
+
+SDL's role: Holding the group. Building connections that outlast the grant.
+Emergence Collective's role: 1:1 learning partner for each grantee org.`;
+
+let msgs = [];
+let loading = false;
+
+function resize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 110) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+}
+
+function useChip(el) {
+  const inp = document.getElementById('input');
+  inp.value = el.textContent;
+  resize(inp);
+  inp.focus();
+}
+
+function addMsg(role, text) {
+  const wrap = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = `message ${role}`;
+
+  const av = document.createElement('div');
+  av.className = `avatar ${role}`;
+  av.textContent = role === 'bot' ? 'RCB' : 'You';
+
+  const bub = document.createElement('div');
+  bub.className = 'bubble';
+  bub.innerHTML = fmt(text);
+
+  div.appendChild(av);
+  div.appendChild(bub);
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function fmt(text) {
+  return text.split('\n\n').map(p => {
+    p = p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    p = p.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    p = p.replace(/\n/g, '<br>');
+    return `<p>${p}</p>`;
+  }).join('');
+}
+
+function showTyping() {
+  const wrap = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'message bot';
+  div.id = 'typing';
+  const av = document.createElement('div');
+  av.className = 'avatar bot';
+  av.textContent = 'RCB';
+  const t = document.createElement('div');
+  t.className = 'typing';
+  [1,2,3].forEach(() => { const d = document.createElement('div'); d.className = 'dot'; t.appendChild(d); });
+  div.appendChild(av);
+  div.appendChild(t);
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function clearTyping() {
+  const el = document.getElementById('typing');
+  if (el) el.remove();
+}
+
+async function send() {
+  const inp = document.getElementById('input');
+  const text = inp.value.trim();
+  if (!text || loading) return;
+
+  loading = true;
+  document.getElementById('sendBtn').disabled = true;
+  inp.value = '';
+  inp.style.height = 'auto';
+
+  addMsg('user', text);
+  msgs.push({ role: 'user', content: text });
+  showTyping();
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM,
+        messages: msgs
+      })
+    });
+    const data = await res.json();
+    clearTyping();
+    const reply = data.content?.[0]?.text || "Something went sideways on my end — try again?";
+    addMsg('bot', reply);
+    msgs.push({ role: 'assistant', content: reply });
+  } catch(e) {
+    clearTyping();
+    addMsg('bot', "Hmm, hit a snag. Give it another shot?");
+  }
+
+  loading = false;
+  document.getElementById('sendBtn').disabled = false;
+  inp.focus();
+}
+</script>
+</body>
+</html>
